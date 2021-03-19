@@ -1,0 +1,20 @@
+---
+:concurrency: 20
+staging:
+  :concurrency: 20
+production:
+  :concurrency: 20
+:queues:
+  - TransscanRequests
+  - close_day
+  - bin
+  - mail
+  - decrease_limit
+  - notifications
+  - notification_agent
+  - default
+  - sidekiq_stats
+:schedule:
+  sidekiq_stats_job:
+    cron: '0 * * * * *' # Runs once per minute
+    class: SidekiqStatsJob

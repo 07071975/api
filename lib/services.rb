@@ -1,0 +1,1 @@
+require 'services/disposition_process_queue_service'

@@ -1,0 +1,5 @@
+require 'models/disposition/vm_cargoes'
+require 'models/order'
+require 'models/state'
+require 'models/region'
+require 'models/country'

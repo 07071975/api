@@ -1,0 +1,43 @@
+#default: &default
+#  adapter: postgis
+#  schema_search_path: public,postgis
+#  postgis_schema: public
+#  su_username: postgresql
+#  su_password: v19v09v25
+#  postgis_extension: true
+#  encoding: unicode
+#  username: 'docker'
+#  password: 'docker'
+#  host: 'localhost'
+#  port: 25432
+#  pool: 5
+
+#  adapter: postgis
+#  encoding: unicode
+#  postgis_extension: postgis # default is postgis
+#  postgis_schema: public # default is public
+#  schema_search_path: public,postgis
+#  pool: 5
+#  database: my_app_development # your database name
+#  username: my_app_user # the username your app will use to connect
+#  password: my_app_password # the user's password
+#  su_username: my_global_user # a superuser for the database
+#  su_password: my_global_pasword # the superuser's password
+
+default: &default
+  adapter: postgis
+  encoding: unicode
+  username: 'docker'
+  password: 'docker'
+  host: 'localhost'
+  port: 25432
+  pool: 5
+
+test:
+  <<: *default
+  database: gis
+
+development:
+  <<: *default
+  database: gis
+

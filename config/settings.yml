@@ -1,0 +1,74 @@
+development:
+  processing_timeout: 25
+  duplicate_lifetime: <%= 30.seconds %>
+  queue_lifetime: <%= 180.seconds %>
+  redis:
+    url: '<%= ENV['TRANSSCAN_REDIS_URL'] || 'redis://127.0.0.1:6379/4' %>'
+  response_ttl: <%= 2*24*60*60 %>
+  sidekiq:
+    url: '<%= ENV['TRANSSCAN_REDIS_URL'] || 'redis://127.0.0.1:6379/4' %>'
+    size: 2
+    namespace: 'ts'
+    network_timeout: 5
+    queue: TransscanRequests
+    request_key_ttl: <%= 10.minutes %>
+    main_pool: true
+    queues:
+      default: 10
+    disposition_process_worker:
+      retry_interval: 3
+      counter_key_lifetime: <%= 1.day %>
+  pubsub:
+    url: '<%= ENV['TRANSSCAN_REDIS_URL'] || 'redis://127.0.0.1:6379/4' %>'
+  disposition_processing_network_timeout: 30
+  auto_reversal_worker_delay: 5
+  #syslog_name: 'transscan'
+
+test:
+  processing_timeout: 25
+  duplicate_lifetime: <%= 5.minutes %>
+  redis:
+    url: '<%= ENV['TRANSSCAN_REDIS_URL'] || 'redis://127.0.0.1:6379/4' %>'
+  response_ttl:  <%= 2.hours %>
+  sidekiq:
+    url: '<%= ENV['TRANSSCAN_REDIS_URL'] || 'redis://127.0.0.1:6379/4' %>'
+    size: 2
+    namespace: 'ts'
+    network_timeout: 5
+    queue: TransscanRequests
+    request_key_ttl: <%= 10.minutes %>
+    main_pool: true
+    queues:
+      default: 10
+      Bogus: 5
+    disposition_process_worker:
+      retry_interval: 3
+      counter_key_lifetime: <%= 1.day %>
+  pubsub:
+    url: '<%= ENV['GATEWAY_REDIS_URL'] || 'redis://127.0.0.1:6379/4' %>'
+  disposition_processing_network_timeout: 30
+  auto_reversal_worker_delay: 5
+
+production:
+  processing_timeout: 25
+  duplicate_lifetime: <%= 5.minutes %>
+  redis:
+    url: '<%= ENV['TRANSSCAN_REDIS_URL'] || 'redis://127.0.0.1:6379/4' %>'
+  response_ttl: <%= 2*24*60*60 %>
+  sidekiq:
+    url: '<%= ENV['TRANSSCAN_REDIS_URL'] || 'redis://127.0.0.1:6379/4' %>'
+    size: 2
+    namespace: 'gw'
+    network_timeout: 5
+    queue: TransscanRequests
+    request_key_ttl: <%= 10.minutes %>
+    main_pool: true
+    queues:
+      default: 10
+    disposition_process_worker:
+      retry_interval: 3
+      counter_key_lifetime: <%= 1.day %>
+  pubsub:
+    url: '<%= ENV['TRANSSCAN_REDIS_URL'] || 'redis://127.0.0.1:6379/4' %>'
+  disposition_processing_network_timeout: 30
+  auto_reversal_worker_delay: 5

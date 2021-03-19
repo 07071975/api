@@ -1,0 +1,73 @@
+
+--описание территории area
+
+CREATE TABLE my_table_geo
+(
+	area_id UInt8,
+	longitude UInt64, 
+	latitude  UInt64
+)
+ENGINE = MergeTree
+ORDER BY (area_id)
+
+INSERT INTO `default`.my_table_geo
+(area_id, longitude, latitude)
+VALUES(2, 31.0, 53.0);
+
+
+
+
+CREATE TABLE test_tuple2
+(
+    `id` UInt8, 
+    `t.1` Array(String),
+    `t.2` Array(String),
+    `t.3` Array(String)
+)
+ENGINE = MergeTree
+ORDER BY tuple()
+
+insert into test_tuple2 values (1, ['a','x'],['b','y'],['c','z']);
+
+insert into test_tuple2 values (1, [('a','b','c'),('x','y','z')])
+
+create table test_area_geo(
+   area_id  Int32,
+   area Array(Tuple(UInt64, UInt64))
+)
+ENGINE=MergeTree()
+ORDER BY (area_id)
+
+insert into test_area_geo
+select g.area_id, g.area
+from (
+    select geo.area_id, groupArray((geo.longitude, geo.latitude)) as area
+    from my_table_geo geo
+    group by area_id
+) g
+
+
+
+-----------------------------
+product_0	825026710339584
+product_1	798413025116160
+product_10	558889619226624
+product_11	532275880919040
+product_12	505662137303040
+product_13	479048388378624
+-------------------------------------------------
+--Clickhouse - Group by within nested columns
+
+create table nested_columns_test(
+  id Int32,
+  items Nested(productName String, amount Int32)
+) Engine = MergeTree()
+order by (id);
+
+insert into nested_columns_test
+select number as id,
+      arrayMap(x -> concat('product_', toString(x)), range(number % 32)) as `items.productName`, 
+      arrayMap(x -> number + x, range(number % 32)) as `items.amount` 
+from numbers(100*1000*1000);
+
+
